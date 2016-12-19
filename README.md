@@ -12,7 +12,7 @@
   如果你是刚开始使用Spring，你也许可以通过创建一个Spring Boot的基础应用来使用Spring。Spring Boot提供了一个快捷简便的方式来创建可以用于生产环境的Spring 基本应用。它基于Spring Framework，遵循习惯优于配置，并设计成让你能更快的运行起来。
   
   你可以通过spring.io指导来集成一个基本的工程或采用像“构建RESTful Web Service起步”的方式。这样的方式更加容易理解，同时这些指导内容都非常注重功能本身，他们大部分都是以Spring Boot为基础构建的。这些指导内容同样包含了一些其他的Spring项目，这样当你要解决一个特殊问题的时候就可以考虑这些项目。
-### 2、 Sring Framework介绍
+### 2、 Spring Framework介绍
 
   Spring Framework 是一个java框架，用来为开发java应用提供多方面的底层支持。Spring负责处理底层问题，让你可以专注于业务本身的逻辑。
   
