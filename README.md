@@ -47,4 +47,20 @@ Spring Framework 由很多特性组成，并放到了20个模块中。这些模�
 
   下面列出了各个特性可供使用的模块以及各模块的artifact名称。Artifact名称在依赖管理工具中与artifact id相关联。
 
-##### 2.2.1 核心容器  
+##### 2.2.1 核心容器
+
+  核心容器包括几个模块：spring-core,spring-beans,spring-context,spring-context-support以及spring-expression(Spring表达式语言)。
+
+  spring-core和spring-beans模块提供了框架中一些基础的部分，包括IOC和DI功能。BeanFactory是工厂模式的一个更高级的实现。它去除了程序对单例模式的需要，并且允许你解耦配置，然后根据你实际的编码逻辑设置依赖关系。
+
+  Context(spring-context)模块以Core和Beans模块为基础构建：他是一个类似于JNDI注册表式的框架风格的访问对象的方式。Context模块继承了Beans模块的功能，并增加了对国际化的（比如 resource bundles的使用）,事件传播，资源加载，以及Context的透明创造，例如一个Servlet容器。Context模块同样支持像EJB,JMX或基本的远程处理的支持。ApplicationContext接口是Context模块的核心。spring-context-support为Spring应用上下文整合了通用的三方库，比如缓存（EhCache,Guava,JCache）,邮件（JavaMail）,定时任务（CommonJ,Quartz），以及末班引擎（FreeMarker,JasperReports,Velocity）。
+
+  spring-expression模块为runtime时的查询和操作对象图提供了一个强大的EL语言，在JSP 2.1规范中，它作为统一表达式语言规范的一个扩展。该表达式语言支持属性值的setting和gettting，属性分配，方法调用，访问数组，集合，索引器的内容，逻辑和算术运算，变量命名，在IOC中根据名称查找对象。同时也支持列表投影，选择以及通用列表的聚合。
+
+##### 2.2.2. AOP和设备
+
+  spring-aop模块提供了AOP联盟标准的一个面向切面编程的实现，允许你自定义拦截器和切点来干净的解耦应该被分离的代码。使用源码级的元数据功能，同样可以将行为信息放到你的代码中，类似于.NET的属性值。
+
+  独立的spring-aspects模块提供了对AspectJ的整合。
+
+  
