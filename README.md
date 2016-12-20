@@ -3,28 +3,28 @@
 
 ##第一部分 Spring Framework 概览
   Spring Framework是一个轻量级的，一站式的用于创建企业级应用的解决方案。并且Spring是模块化的，你可以只使用你需要的模块，并非必须全部引用。你可以把任何web framework放在IOC容器之上，也可以只使用hibernate集成或JDBC抽象层这样的代码。Spring Framework支持声明式的事务管理，通过RMI(即Remote Method Invoke 远程方法调用)或web service来访问你的业务逻辑，并提供了几种方式用于保存数据。Spring Framework提供了一个全功能的MVC框架，这样就可以将AOP显示的集成在你的代码中。
-  
+
   Spring是非侵入式，这就意味着在你的业务代码中通常并不依赖于framework本身。在你的封装层（比如数据访问层），在数据访问技术上一些dependencies和Spring libraries 还是存在的，但这些dependencies可以很容易的与你的基础代码分离。
-  
+
 ###   1. Spring 起步
   本文提供了Spring Framework 所有特性的说明文档，也包含了一些诸如“依赖注入”之类的习惯性说法。
-  
+
   如果你是刚开始使用Spring，你也许可以通过创建一个Spring Boot的基础应用来使用Spring。Spring Boot提供了一个快捷简便的方式来创建可以用于生产环境的Spring 基本应用。它基于Spring Framework，遵循习惯优于配置，并设计成让你能更快的运行起来。
-  
+
   你可以通过spring.io指导来集成一个基本的工程或采用像“构建RESTful Web Service起步”的方式。这样的方式更加容易理解，同时这些指导内容都非常注重功能本身，他们大部分都是以Spring Boot为基础构建的。这些指导内容同样包含了一些其他的Spring项目，这样当你要解决一个特殊问题的时候就可以考虑这些项目。
 ### 2. Spring Framework介绍
 
   Spring Framework 是一个java框架，用来为开发java应用提供多方面的底层支持。Spring负责处理底层问题，让你可以专注于业务本身的逻辑。
-  
+
   Spring允许通过POJO（简单的java对象）来构建应用，并对其应用非侵入式的企业服务。该功能用于标准的java程序模型，以及整体或部分的JavaEE。
-  
+
   作为一个应用程序的开发者，你可以通过Spring框架得到如下便利：
-  
+
  - 掉用Java方法用于数据库事务时，不需要非得通过事务API来解决；
  - 使一个本地的Java方法变为一个远程的程序，而无需处理远程API;
  - 使一个本地的Java方法变为一个管理操作，而无需处理JMX API;
  - 是一个本地的Java方法变为一个消息处理器，而无需处理JMS APS;
- 
+
 #### 2.1. 依赖注入和控制反转
 一个java应用：不太标准的说法是一个运行范围从嵌入式程序到N层的大型服务器端企业级的应用程序，通常由很多对象协调来构成一个完整的应用程序。应用程序中的这些对象彼此依赖。
 
@@ -34,7 +34,17 @@ Spring Framework的IOC组件针对这一问题，通过在完整的工作应用�
   
 
 背景
-  
-  2004年Martin Fowler在他的个人网站上提出了一个关于IOC的问题--“到底是哪方面被反转了”。他建议重新命名这个概念的名称（IOC），使其更能自我解释，随后Fowler给他起了一个名字“Dependency Injection”（DI,依赖注入）。
-  
+
+  2004年Martin Fowler在他的个人网站上提出了一个关于IOC的问题--“到底是哪方面被反转了”。他建议重新命名这个概念的名称（IOC），使其更加一目了然，随后Fowler给他起了一个名字“Dependency Injection”（DI,依赖注入）。
+
 #### 2.2. 模块化
+
+Spring Framework 由很多特性组成，并放到了20个模块中。这些模块被组合进核心容器、数据访问/集成、Web、AOP(面向切面编程)、设备、消息以及测试，如下图所示。
+
+  图2.1 Spring Framework概览
+
+  ![Spring Framework概览](http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/images/xspring-overview.png.pagespeed.ic.r3l2HohxPQ.webp)
+
+  下面列出了各个特性可供使用的模块以及各模块的artifact名称。Artifact名称在依赖管理工具中与artifact id相关联。
+
+##### 2.2.1 核心容器  
