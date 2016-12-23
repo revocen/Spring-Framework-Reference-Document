@@ -84,3 +84,19 @@ spring-oxm模块提供了一个O/X映射的实现，比如JAXB，Castor,XMLBeans
 spring-jms模块（java消息服务）包括生产和处理消息的功能。从Spring Framework 4.1开始，使用spring-messaging模块提供了集成。
 
 ##### 2.2.5 Web
+
+Web层包括了spring-web,spring-webmvc,spring-websocket以及spring-webmvc-portlet几个模块。
+
+spring-web模块提供了基础的面向web的集成功能，例如文件上传功能，以及通过servlet监听器和一个面向web的应用上下文初始化IOC容器。也包括了一个HTTP客户端和Spring提供的远程支持部分中网络相关的内容。
+
+spring-webmvc模块（也叫web-servlet模块）模块，包括为web应用实现的Spring的模型-视图-控制器（MVC）和REST Web Service。
+
+Spring MVC在domain代码，web表单之间提供了一个干净的隔离，并且和所有Spring Framework的其他功能进行了集成。
+
+spring-webmvc-portlet模块（也叫Web门户组件模块）提供了MVC的实现，用于门户组件环境中，体现了spring-mvc模块的功能。
+
+##### 2.2.6 测试
+
+spring-test模块通过JUnit或TestNG提供了unit测试和集成测试。提供了Spring ApplicationContext和这些context的缓存的一致的加载方式。也提供了模拟对象，这样你就可以在隔离的情况下测试你的代码了。
+
+#### 2.3 使用场景
