@@ -103,6 +103,6 @@ spring-test模块通过JUnit或TestNG提供了unit测试和集成测试。提供
 
 前面说的构建模块通过使用Spring的事物管理功能和web框架整合让Spring在很多场景中都有一个适合的选择，不论是运行在资源受限的设备的嵌入式应用还是成熟的企业级的应用。
 
-图2.2 典型的成熟的Spring Web应用
+图2.2 典型的成熟Spring Web Application
 
 ![Spring Web Application](http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/images/overview-full.png.pagespeed.ce.sC26wirtWB.png)
