@@ -57,10 +57,30 @@ Spring Framework 由很多特性组成，并放到了20个模块中。这些模�
 
   spring-expression模块为runtime时的查询和操作对象图提供了一个强大的EL语言，在JSP 2.1规范中，它作为统一表达式语言规范的一个扩展。该表达式语言支持属性值的setting和gettting，属性分配，方法调用，访问数组，集合，索引器的内容，逻辑和算术运算，变量命名，在IOC中根据名称查找对象。同时也支持列表投影，选择以及通用列表的聚合。
 
-##### 2.2.2. AOP和设备
+##### 2.2.2. AOP和工具
 
   spring-aop模块提供了AOP联盟标准的一个面向切面编程的实现，允许你自定义拦截器和切点来干净的解耦应该被分离的代码。使用源码级的元数据功能，同样可以将行为信息放到你的代码中，类似于.NET的属性值。
 
   独立的spring-aspects模块提供了对AspectJ的整合。
 
-  
+  spring-instrument模块提供了类工具的支持和类加载器的实现，用于某些应用服务中。spring-instrument-tomcat模块包括了Spring对tomcat的代理工具。
+
+##### 2.2.3. 消息
+
+  Spring Framework 4包括了一个spring-messaging模块，这是对Spring集成项目中的像消息，消息通道，消息处理器进行了关键性的抽象。该模块也提供了类似于编程模式spring MVC注解的一系列为方法映射消息的注解。
+
+##### 2.2.4 数据访问/集成
+
+数据访问/集成层包括JDBC、ORM、OXM、JMS以及事物模块。
+
+spring-jdbc模块提供了一个jdbc的抽象层，移除了乏味的JDBC代码，以及对数据库厂商特殊错误代码的转换。
+
+spring-tx模块为实现特殊接口的类提供了编程示和声明式的事物管理，并且可以用于所有的POJO。
+
+spring-orm模块为流行的对象-关系映射API（包括JPA,JDO,hibernate）提供了整合层。使用spring-orm模块你可以将所有这些O/R映射的框架与Spring提供的其他特性整合到一块，比如前面提到的事物管理功能。
+
+spring-oxm模块提供了一个O/X映射的实现，比如JAXB，Castor,XMLBeans,JiBX,XStream的抽象层。
+
+spring-jms模块（java消息服务）包括生产和处理消息的功能。从Spring Framework 4.1开始，使用spring-messaging模块提供了集成。
+
+##### 2.2.5 Web
