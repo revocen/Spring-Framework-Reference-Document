@@ -100,3 +100,9 @@ spring-webmvc-portlet模块（也叫Web门户组件模块）提供了MVC的实�
 spring-test模块通过JUnit或TestNG提供了unit测试和集成测试。提供了Spring ApplicationContext和这些context的缓存的一致的加载方式。也提供了模拟对象，这样你就可以在隔离的情况下测试你的代码了。
 
 #### 2.3 使用场景
+
+前面说的构建模块通过使用Spring的事物管理功能和web框架整合让Spring在很多场景中都有一个适合的选择，不论是运行在资源受限的设备的嵌入式应用还是成熟的企业级的应用。
+
+图2.2 典型的成熟的Spring Web应用
+
+![Spring Web Application](http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/images/overview-full.png.pagespeed.ce.sC26wirtWB.png)
