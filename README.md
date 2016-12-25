@@ -168,3 +168,54 @@ Spring Framework 每个发行版都会将artifact放到下面地方：
 |org.springframework | spring-webmvc    | 为web应用提供的REST Web Service和模型-视图-控制器的实现|
 |org.springframework | spring-webmvc-portlet    | 用于Porlet环境的MVC实现|
 |org.springframework | spring-websocket    | WebSocket和SockJS实现，包括STOMP的支持|
+
+##### Spring依赖和在Spring中依赖
+
+尽管Spring提供了集成，也对大量企业级和其他扩展工具提供了支持，但他有意的保持了对一个最小限度的抽象的强制性依赖：你不必去查找并下载（甚至是自动下载）大量的jar包类库，到最后只是为了一个很简单的原因使用Spring。对于基础的依赖注入，只有一个强制性的外部依赖，而且他还是为了记录日志（看下面，可以获取更多的有关日志的描述）。
+
+下一步，我们脱离基础的步骤，需要在Spring上配置应用的依赖。首先使用Maven，然后使用Gradle，最后使用lvy。如果有什么不清楚的，可以看看你使用的依赖工具的文档，或者看看一些简单的代码-Spring本身使用Gradle作为依赖管理工具来构建，并且我们的示例代码大都使用Gradle或者Maven。
+
+##### Maven依赖管理
+
+如果你使用Maven作为依赖工具，你甚至不需要直接的获取日志依赖。比如创建一个应用上下文，并且使用依赖注入来配置一个应用，你的Maven依赖将会是这样：
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>4.3.5.RELEASE</version>
+            <scope>runtime</scope>
+       </dependency>
+    </dependencies>
+
+这样就可以了。需要说明的是“scope”，如果不需要使用Spring的API来编译代码，可以声明成runtime，在基础的依赖注入使用案例中，这算是一个典型的例子了。
+
+上面是使用Maven中央库的例子。要是使用Spring Maven库的话（比如里程碑或者开发者快照），你需要在你的Maven配置中配置仓库的位置。获取全部发行版：
+
+    <repositories>
+        <repository>
+            <id>io.spring.repo.maven.release</id>
+            <url>http://repo.spring.io/release/</url>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+    </repositories>
+
+获取里程碑：
+
+    <repositories>
+      <repository>
+        <id>io.spring.repo.maven.milestone</id>
+          <url>http://repo.spring.io/milestone/</url>
+        <snapshots><enabled>false</enabled></snapshots>
+      </repository>
+    </repositories>
+
+获取快照：
+
+  <repositories>
+    <repository>
+      <id>io.spring.repo.maven.snapshot</id>
+      <url>http://repo.spring.io/snapshot/</url>
+      <snapshots><enabled>true</enabled></snapshots>
+    </repository>
+  </repositories>
