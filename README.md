@@ -147,7 +147,7 @@ Spring Framework 每个发行版都会将artifact放到下面地方：
 ##### 2.1 Spring Framework Artifacts
 
 | GroupId            | ArtifactId    | Description           |
-|:------------------:|:-------------:|:---------------------:|
+|:------------------:|:-------------:|:----------------------|
 |org.springframework | spring-aop    | 基于代理的AOP支持|
 |org.springframework | spring-aspects    | 基于AspectJ的aspect|
 |org.springframework | spring-beans    | Bean支持，包括Groovy|
