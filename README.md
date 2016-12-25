@@ -212,10 +212,10 @@ Spring Framework 每个发行版都会将artifact放到下面地方：
 
 获取快照：
 
-  <repositories>
-    <repository>
-      <id>io.spring.repo.maven.snapshot</id>
-      <url>http://repo.spring.io/snapshot/</url>
-      <snapshots><enabled>true</enabled></snapshots>
-    </repository>
-  </repositories>
+    <repositories>
+      <repository>
+          <id>io.spring.repo.maven.snapshot</id>
+          <url>http://repo.spring.io/snapshot/</url>
+          <snapshots><enabled>true</enabled></snapshots>
+      </repository>
+    </repositories>
