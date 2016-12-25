@@ -41,7 +41,7 @@ Spring Framework的IOC组件针对这一问题，通过在完整的工作应用�
 
 Spring Framework 由很多特性组成，并放到了20个模块中。这些模块被组合进核心容器、数据访问/集成、Web、AOP(面向切面编程)、设备、消息以及测试，如下图所示。
 
-  图2.1 Spring Framework概览
+##### 图 2.1 Spring Framework概览
 
   ![Spring Framework概览](http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/images/xspring-overview.png.pagespeed.ic.r3l2HohxPQ.webp)
 
@@ -103,6 +103,68 @@ spring-test模块通过JUnit或TestNG提供了unit测试和集成测试。提供
 
 前面说的构建模块通过使用Spring的事物管理功能和web框架整合让Spring在很多场景中都有一个适合的选择，不论是运行在资源受限的设备的嵌入式应用还是成熟的企业级的应用。
 
-图2.2 典型的成熟Spring Web Application
+##### 图2.2 典型的成熟Spring Web Application
 
 ![Spring Web Application](http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/images/overview-full.png.pagespeed.ce.sC26wirtWB.png)
+
+Spring声明式事物管理功能让web应用布满事物，就像你使用EJB的容器管理事物的样子。你所有自定义的业务逻辑代码都可以通过简单的POJO来实现，并通过Spring的IOC事物管理来管理。其他的服务包括对发邮件的支持，校验（依赖于web层，这样可以让来选择在哪执行校验规则），和JPA、hibernate、JDO集成了的Spring ORM；比如，当用到hibernate，你可以继续使用你已经在的映射文件和标准的hibernate SessionFactory配置。表单控制器通过业务模型与web层无缝集成，并移除了对ActionForm或其他的类（用于将HTTP的参数转换为你的业务模型）的需要。
+
+#####  图 2.3 使用一个第三方web framework的Spring中间层
+
+![Figure 2.3](http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/images/overview-thirdparty-web.png.pagespeed.ce.1lJso2G8WP.png)
+
+有时候并不允许你完全的去选择一个不同的框架。Spring Framework不会强迫你使用它的所有功能，她不是一个“除非全用否则全不用”的方案。目前像Struts,Tapestry,JSF或其他前端UI框架都可以通过一个Spring的基础中间层来集成，这样你就可以使用Spring的事物功能了。你需要使用一个ApplicationContexthe和一个WebApplicatinContext来简单的把你的业务逻辑集成到你的web层。
+
+##### 图 2.4. 远程处理使用环境
+
+![Figure 2.4](http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/images/overview-remoting.png.pagespeed.ce.HIMsJb_Xya.png)
+
+当你需要通过web service来访问已经存在代码，你可以使用Spring的Hessian-,Burlap-,Rmi-或JaxRpcProxyFactory的类。可以无区别的访问存在的应用。
+
+##### 图 2.5. EJB 包装已有的POJO
+
+![Figure 2.5](http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/images/overview-ejb.png.pagespeed.ce.VN88UiKUhA.png)
+
+Spring Framework 同样为企业级JavaBean提供了一个访问和抽象层，可以使你能复用你已有的POJO，并把他们包装在无状态的session bean中以用在可扩展性，以及需要声明安全的不安全的web应用中。
+
+##### 2.3.1 依赖管理和命名规范
+
+依赖管理和依赖注入是两个不同的东西。为了将Spring那些nice的功能用在你的应用中（比如依赖注入），你需要将所有需要的类库（jar包）集中，并将他们放在你的运行时（也可能在编译时）的classpath中，这些依赖并不是被注入的虚拟组件，而是在文件系统中（通常来说）的真实的资源。以来管理的过程涉及加载那些资源，并存储，然后加到classpath
+中。可以是直接依赖（比如我的应用在运行时直接依赖于Spring）或者间接依赖（比如我的应用直接依赖于commons-dbcp，而commons-dbcp直接依赖于commons-pool）。间接依赖也叫“依赖传递”，他是那些特别不容易定义和管理的依赖。
+
+如果你将使用Spring，你需要复制一份你需要用到的Spring的部分的jar包。为了让这件事更容易，Spring被打包成很一系列的模块，尽可能的隔离依赖关系，比如如果你不想写一个web应用，你就不需要spring-web相关的模块。本文中的Spring模块，我们使用一个简短的命名方式spring-* 或spring-\*.jar, \*代表模块的简称（比如spring-core,spring-webmvc,spring-jms等等）实际上你用的jar文件命名一般是模块名加版本号（比如spring-core-4.3.5.RELEASE.jar）。
+
+Spring Framework 每个发行版都会将artifact放到下面地方：
+
+- Maven中央仓库，Maven查找的默认的仓库，并且使用时不要求任何特殊的配置。许多Spring依赖的一般库也可以从Maven中央库中获得，很多Spring社区都是用maven作为依赖管理，对他们来说这很方便。这里的jar包的命名使用spring-\*-< version >.jar的形式，maven的groupid是org.springframework。
+
+- 把Spring托管在一个具体的公共Maven库中。除了最终的GA版（General Availability，最终版），该库中也有开发版的快照和里程碑。jar包的命名与Maven中央库的命名形式相同，因此这是一个很有用的地方，来获取Spring的开发版本，并与部署在Maven中央库的其他类库一块使用。该仓库也包括了一些分发的Zip文件，包括了Spring所有的jar包，以方便下载。
+
+因此，你首先要想的是怎么管理依赖：我们一般推荐使用自动化系统，比如Maven，Gradle或者lvy，当然你也可以手动下载所有的jar包。
+
+下面是Spring artifact的列表，想了解各个模块的具体信息，可以看第2.2章 “模块”。
+
+##### 2.1 Spring Framework Artifacts
+
+| GroupId            | ArtifactId    | Description           |
+|:------------------:|:-------------:|:---------------------:|
+|org.springframework | spring-aop    | 基于代理的AOP支持|
+|org.springframework | spring-aspects    | 基于AspectJ的aspect|
+|org.springframework | spring-beans    | Bean支持，包括Groovy|
+|org.springframework | spring-context    | 应用上下文运行时，包括调度和远程的抽象|
+|org.springframework | spring-context-support    | 用于支持将第三方库整合进Spring应用上下文的支持类|
+|org.springframework | spring-core    | 核心工具，许多其他Spring模块都有用到|
+|org.springframework | spring-expression    | Spring表达式语言|
+|org.springframework | spring-instrument    | 为JVM引导启动用的代理工具|
+|org.springframework | spring-instrument-tomcat    | tomcat的代理工具|
+|org.springframework | spring-jdbc    | jdbc支持包，包括数据库加载和jdbc访问支持|
+|org.springframework | spring-jms    | JMS支持包，包括收发JMS消息的帮助类|
+|org.springframework | spring-messaging    | 提供消息架构和协议的支持|
+|org.springframework | spring-orm    | 对象关系映射，包括JPA和hibernate的支持|
+|org.springframework | spring-oxm    | 对象XML映射|
+|org.springframework | spring-test    | 为单元测试提供支持，并整合Spring组件测试|
+|org.springframework | spring-tx    | 事务基础组件，包括DAO支持和JCA集成|
+|org.springframework | spring-web    | web支持包包括客户端和web远程|
+|org.springframework | spring-webmvc    | 为web应用提供的REST Web Service和模型-视图-控制器的实现|
+|org.springframework | spring-webmvc-portlet    | 用于Porlet环境的MVC实现|
+|org.springframework | spring-websocket    | WebSocket和SockJS实现，包括STOMP的支持|
