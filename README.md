@@ -219,3 +219,41 @@ Spring Framework 每个发行版都会将artifact放到下面地方：
           <snapshots><enabled>true</enabled></snapshots>
       </repository>
     </repositories>
+
+##### Maven“材料清单”依赖
+
+使用Maven的时候，可能会意外的将各版本Spring的jar包混合使用。比如，你可能从一个第三方库或另一个Spring项目中找到jar包，，然后在一个老版本中把他拉进一个传递依赖中。如果你忘了明确的声明一个直接依赖，那么各种各样的问题将会接憧而至。
+
+为了解决这类问题，Maven支持一个“材料清单”（BOM）依赖的概念
+。你可以在你的依赖管理中引入springframework-bom来确保所有的spring依赖（不论直接还是间接依赖）都是相同的版本。
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>4.3.5.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+           </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+使用BOM的另一个好处是你不再需要在依赖中为Spring Framework配置 < version >属性了。
+
+##### Gradle依赖管理
+
+通过Gradle构建工具来使用Spring仓库，在仓库部分加入适当的URL：
+
+    repositories {
+        mavenCentral()
+        // and optionally...
+        maven { url "http://repo.spring.io/release" }
+    }
+
+你可以更换仓库URL，/release，/milestone，或者/snapshot都可以。一旦仓库配置完，你就可以使用通常的Gradle方法来声明依赖。
+
+    dependencies {
+        compile("org.springframework:spring-context:4.3.5.RELEASE")
+        testCompile("org.springframework:spring-test:4.3.5.RELEASE")
+    }
