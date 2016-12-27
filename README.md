@@ -251,9 +251,51 @@ Spring Framework 每个发行版都会将artifact放到下面地方：
         maven { url "http://repo.spring.io/release" }
     }
 
-你可以更换仓库URL，/release，/milestone，或者/snapshot都可以。一旦仓库配置完，你就可以使用通常的Gradle方法来声明依赖。
+你也可以更换仓库URL，把“/release”换成“/milestone”或者“/snapshot”都可以。一旦仓库配置完，你就可以按照通常的Gradle方法来声明依赖。
 
     dependencies {
         compile("org.springframework:spring-context:4.3.5.RELEASE")
         testCompile("org.springframework:spring-test:4.3.5.RELEASE")
     }
+
+lvy依赖管理
+
+如果你准备用lvy来管理依赖，配置项差不多。
+
+配置lvy指向Spring的仓库，需要在ivysettings.xml里加上下面的解析器：
+
+    <resolvers>
+        <ibiblio name="io.spring.repo.maven.release"
+                  m2compatible="true"
+                  root="http://repo.spring.io/release/"/>
+    </resolvers>
+
+你可以将“root”里“/release”url更换为“/milestone”或“/snapshot”
+
+配置完后，你就可以按照通常的方式添加依赖了。比如（在ivy.xml里）：
+
+      <dependency org="org.springframework"
+            name="spring-core"
+            rev="4.3.5.RELEASE"
+            conf="compile->runtime"/>
+
+##### Zip文件分发
+
+尽管使用依赖管理构建工具来获取Spring Framework是一种推荐的做法，但是仍然可以直接下载一个分发的压缩文件。
+
+分发压缩包已经发行到Spring的Maven仓库（这只是为了我们自己方便，你不需要为了下载这些文件使用Maven获取其他的构建工具）。
+
+下载压缩包的话，打开浏览器访问 http://repo.spring.io/release/org/springframework/spring，然后根据你的需要选择适合的版本子目录。分发包以“-dist.zip”结尾，比如spring-framework-{spring-version}-RELEASE-dist.zip。在里程碑和快照中也发布了分发包。
+
+##### 2.3.2 日志
+
+日志是Spring中一个非常重要的依赖，因为：
+  a) 这是唯一一个强制性的外部依赖；
+  b) 每个人都想看看他们正在用的工具输出了哪些东西；
+  c) Spring集成了许多其他的工具，这些工具也会用到日志依赖。
+
+应用开发人员的一个期望往往是在整个应用中有一个统一的日志配置，包括所有外部的组件。由于有很多日志框架可供选择，所以这变得更难了。
+
+在Spring中使用Jakarta Commons Logging(JCL)作为强制性的日志依赖。我们编译JCL并使JCL的Log对象对类可见，这样就扩展了Spring Framework。所有的Spring使用相同的日志库（便于迁移），即使应用扩展了Spring，但向后兼容一直保留着，这对用户来说是很重要的。我们的解决方法是使其中一个模块对common-loggging（JCL规范的实现）有明确的依赖，然后让所有其他的模块在编译时依赖。比如，如果你正在使用Maven，会很疑惑你在哪依赖了common-logging，它是在Spring的中心模块叫spring-core的地方被明确的。
+
+好消息是对于commons-logging，你不再需要其他任何东西，就可以让你的应用正常工作。它有个运行时的发现算法，用来在classpath里众所周知的地方查找其他的日志框架，并使用它认为合适（或者你可以告诉他你需要哪个）的框架。如果没有你觉得不错可以用的日志，就会到JDK里去找（java.util.logging或JUL）。你要找一个可以在大多数情况可以让你的Spring应用正常工作并输出日志的框架，这个很重要。
