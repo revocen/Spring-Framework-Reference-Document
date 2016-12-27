@@ -285,7 +285,7 @@ lvy依赖管理
 
 分发压缩包已经发行到Spring的Maven仓库（这只是为了我们自己方便，你不需要为了下载这些文件使用Maven获取其他的构建工具）。
 
-下载压缩包的话，打开浏览器访问 http://repo.spring.io/release/org/springframework/spring，然后根据你的需要选择适合的版本子目录。分发包以“-dist.zip”结尾，比如spring-framework-{spring-version}-RELEASE-dist.zip。在里程碑和快照中也发布了分发包。
+下载压缩包的话，打开浏览器访问 http://repo.spring.io/release/org/springframework/spring ，然后根据你的需要选择适合的版本子目录。分发包以“-dist.zip”结尾，比如spring-framework-{spring-version}-RELEASE-dist.zip。在里程碑和快照中也发布了分发包。
 
 ##### 2.3.2 日志
 
