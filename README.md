@@ -1,5 +1,5 @@
 # Spring Framework 翻译试水
-##翻译内容基于Spring Framework 4.3.4.RELEASE
+##翻译内容基于Spring Framework 4.3.5.RELEASE
 
 ##第一部分 Spring Framework 概览
   Spring Framework是一个轻量级的，一站式的用于创建企业级应用的解决方案。并且Spring是模块化的，你可以只使用你需要的模块，并非必须全部引用。你可以把任何web framework放在IOC容器之上，也可以只使用hibernate集成或JDBC抽象层这样的代码。Spring Framework支持声明式的事务管理，通过RMI(即Remote Method Invoke 远程方法调用)或web service来访问你的业务逻辑，并提供了几种方式用于保存数据。Spring Framework提供了一个全功能的MVC框架，这样就可以将AOP显示的集成在你的代码中。
@@ -299,3 +299,75 @@ lvy依赖管理
 在Spring中使用Jakarta Commons Logging(JCL)作为强制性的日志依赖。我们编译JCL并使JCL的Log对象对类可见，这样就扩展了Spring Framework。所有的Spring使用相同的日志库（便于迁移），即使应用扩展了Spring，但向后兼容一直保留着，这对用户来说是很重要的。我们的解决方法是使其中一个模块对common-loggging（JCL规范的实现）有明确的依赖，然后让所有其他的模块在编译时依赖。比如，如果你正在使用Maven，会很疑惑你在哪依赖了common-logging，它是在Spring的中心模块叫spring-core的地方被明确的。
 
 好消息是对于commons-logging，你不再需要其他任何东西，就可以让你的应用正常工作。它有个运行时的发现算法，用来在classpath里众所周知的地方查找其他的日志框架，并使用它认为合适（或者你可以告诉他你需要哪个）的框架。如果没有你觉得不错可以用的日志，就会到JDK里去找（java.util.logging或JUL）。你要找一个可以在大多数情况可以让你的Spring应用正常工作并输出日志的框架，这个很重要。
+
+##### 不使用通用的日志
+
+不幸的是commons-logging的运行时发现算法，方便的是最终用户，这是个问题。如果我们能回到过去，并且把Spring作为一个新的项目，那么就会使用一个不同的日志依赖。首选的应该是Simple Facade For Java（SLF4J），用户也将自己的Spring应用中许多其他的工具使用了这个框架。
+
+下面是两个基本的方法来切换commons-logging：
+
+1. 从spring-core从移除依赖（因为他是唯一一个对commons-logging明确依赖的一个模块）
+2. 依赖一个特殊的commons-logging，这个包是一个空的jar（详情的话可以去看看SLF4J）
+
+移除commons-logging，需要在依赖管理中添加以下内容：
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>4.3.5.RELEASE</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+现在应用程序可能由于在classpath中没有JCL的实现而崩溃，因此要修复这个问题，必须提供一个新的日志。下一节中，我们会以SLF4J为例说明如何添加一个可用的JCL实现。
+
+##### 使用SLF4J
+
+SLF4J是一个干净的依赖，并且比commons-logging运行时效率更高，这是因为它使用了编译时绑定来代替他所集成其他日志框架运行时的发现算法。这也意味了在运行时或声明时，又或是配置时你必须更清晰的表达你所希望的结果。SLF4J提供了对很多常见日志框架的绑定，这样通常情况下，你就可以选择你已经在用的日志框架，然后绑定配置和管理。
+
+SLF4J提供了很多常用日志框架的绑定，包括JCL，它同时也做了与之相反的事：在他自己和其他日志框架之间建立桥梁。因此，在Spring中使用SLF4J你需要使用SLF4J的JCL桥替换commons-logging依赖。这样做完之后，Spring内的日志响应就会被转移到SLF4J的之日响应中。因此如果你的应用中有其他的类库使用的这个API，那么你只需要在一个地方配置和管理日志就可以了。
+
+通常的做法应该是将Spring桥接到SLF4J，并显示的将SLF4J绑定到Log4J。你需要有4个依赖（不算已经存在commons-logging）:桥接包，SLF4J包，桥接Log4J包，以及Log4J自己的实现。在Maven里你可以这么干：
+```
+<dependencies>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>4.3.5.RELEASE</version>
+        <exclusions>
+            <exclusion>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>1.5.8</version>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.5.8</version>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.5.8</version>
+    </dependency>
+    <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.14</version>
+    </dependency>
+</dependencies>
+```
+
+可能看起来只是为了获取一些日志，却引了这么多依赖。确实如此，但这是可以选择的。而且他比普通的commons-loggging在解决类加载问题上表现更好，尤其是你在一个很严格的容器中，比如OSGi平台。可能这里也有一个性能上的提升，因为绑定操作是在编译时进行的而非运行时。
