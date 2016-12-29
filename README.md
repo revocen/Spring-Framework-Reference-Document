@@ -371,3 +371,69 @@ SLF4J提供了很多常用日志框架的绑定，包括JCL，它同时也做了
 ```
 
 可能看起来只是为了获取一些日志，却引了这么多依赖。确实如此，但这是可以选择的。而且他比普通的commons-loggging在解决类加载问题上表现更好，尤其是你在一个很严格的容器中，比如OSGi平台。可能这里也有一个性能上的提升，因为绑定操作是在编译时进行的而非运行时。
+
+在SLF4J用户中一个更常见的做法是在更少的步骤下和更少的依赖集中来明确的绑定以获取Logback。这个方法移除了已经存在的绑定步骤，这是因为Logback显示的实现了SLF4J。因此，你只需要依赖两个类库而不是四个了（jcl-over-slf4j和logback）。如果你这么做，那么你也要把slf4j-api依赖从其他外部的依赖（不包括Spring）移除，因为你只是向在classpath中看到一个版本的日志API。
+
+##### 使用Log4J
+
+很多人使用Log4J作为日志框架来达到配置和管理的目的。这是很高效也很好建立的方式，而且实际上这也是我们在运行时构建和测试Spring所使用的方法。Spring也对Log4J提供了一些统一的配置和初始化，因此在一些模块中有有一个编译时依赖的选项。
+
+使用默认的JCL依赖（commons-logging）让Log4J工作，你需要做的只是把Log4j放到classpath中，并在classpath的根路径添加一个配置文件（log4j.properties或者log4j.xml）。下面是Maven用户需要的依赖声明。
+
+```
+<dependencies>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>4.3.5.RELEASE</version>
+    </dependency>
+    <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.14</version>
+    </dependency>
+</dependencies>
+```
+
+下面是一个简单的log4j.properties例子，用来把日志输出到控制台：
+```
+log4j.rootCategory=INFO, stdout
+
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d{ABSOLUTE} %5p %t %c{2}:%L - %m%n
+
+log4j.category.org.springframework.beans.factory=DEBUG
+```
+
+##### 运行时容器和原生JCL
+
+很多人在一个容器中运行他们的Spring应用，而且这个应用本身也提供对JCL的实现。IBM Websphere Application Server(WAS)就是这个原型。这经常会引发一些问题，但糟糕的是并没有一个一劳永逸的解决方案；在大多数方案中，简单的从你的应用中移除commons-logging并不够。
+
+这样说的话，应该会清晰点：报告的问题本质上通常与JCL不相关，甚至commons-logging：相反，他们通常把commons-logging绑定到其他框架（经常是Log4j）。这样做的话是会失败的，这是因为commons-logging修改了运行时的发现算法，包括在一些容器中运行的旧版本（1.0）以及现在人们使用的最新版（1.1）。Spring不使用非常用的JCL API，这样就不会出现问题,但只要Spring或你的应用尝试使用任何你找到的绑定到Log4J的日志框架，就会停止工作。
+
+这时候使用WAS，最容易做的是转换类加载的优先级（IBM叫它“parent last”），以便应用程序控制JCL依赖而非控制容器。这个方法并非总是可用的，但在公共领域有很多其他的方法作为替代方案。你的里程可能会因容器的特定版本和特性而异。
+
+## Spring Framework 4.x的新内容
+
+### Spring Framework 4.0的新功能和增强
+
+Spring Framework 在2004年发布了第一个版本；自从那之后，比较重要的主要版本有：Spring2.0，增加了XML命名空间和对AspectJ的支持；Spring2.5，加入了注解驱动的配置；Spring3.0通过一个强大的JAVA 5.0功能访问框架的基础代码以及特性，比如基于java的@Configuration模块。
+
+4.0版本是Spring Framework最新的一个主要版本，并且第一个完全支持Java8.0特性。你当然可以继续在Spring中使用老版本的java，然而， 现在最低的要求已经提升到Java SE 6了。我们也在一个主要版本的适当时候移除了许多过时的类和方法。
+
+在Spring Framework GitHb Wiki上可以获取一个升级到Spring4.0的迁移指导。
+
+#### 3.1 改善上手体验
+
+新的spring.io网站提供了全部系列的上手指导来帮你学习Spring。你可以在本文档第一章Spring起步里看到更多的指导。对于其他在Spring下发布的项目，新网站也给出了综合性的概览。
+
+如果你是个Maven用户，那你可能对“材料清单”POM文件会感兴趣，他很有用处，并且在Spring Framework各个发行版上发布。
+
+#### 3.2移除过时的包和方法
+
+所有过时的包，很多过时的类和方法在4.0版本已经被移除了。如果你正在从Spring原来的版本升级，你应该确认你已经在过时的API中修复了所有过时的调用。
+
+获取完整的变更，查看API Differences Report。
+
+要注意的是可选择的三方依赖已经升到最小2010/2011（就是说Spring4集成仅支持2010年及之后的发行版本）
