@@ -442,4 +442,4 @@ Spring Framework 在2004年发布了第一个版本；自从那之后，比较�
 
 Spring 4.0 支持Java 8 的一些特性。你可以在Spring的回调接口里使用lambda表达式和方法引用。这是对java.time(JSR)最优先的支持。一些已有的注解已经改成了@Repeatable。你也可以使用Java 8 的参数名发现作为一个替代方案来在调试信息可用的时候来编译你的代码。
 
-Spring保留对老版本的Java和JDK的兼容：具体包括Java SE 6(需要说的是JDK 6 的最小版本为2010年一月份发布的update18) 以及上都仍在全部支持。但是对于新开始的基于Spring 4 的开发项目，我们建议使用Java 7 或 8。
+Spring保留对老版本的Java和JDK的兼容：具体包括Java SE 6(需要说的是JDK 6 的最小版本为2010年一月份发布的update18) 及以上都仍在全部支持。但是对于新开始的基于Spring 4 的开发项目，我们建议使用Java 7 或 8。
