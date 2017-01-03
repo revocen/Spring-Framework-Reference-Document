@@ -414,7 +414,7 @@ log4j.category.org.springframework.beans.factory=DEBUG
 
 这时候使用WAS，最容易做的是转换类加载的优先级（IBM叫它“parent last”），以便应用程序控制JCL依赖而非控制容器。这个方法并非总是可用的，但在公共领域有很多其他的方法作为替代方案。你的里程可能会因容器的特定版本和特性而异。
 
-## Spring Framework 4.x的新内容
+## 第二部分 Spring Framework 4.x的新内容
 
 ### Spring Framework 4.0的新功能和增强
 
@@ -436,4 +436,10 @@ Spring Framework 在2004年发布了第一个版本；自从那之后，比较�
 
 获取完整的变更，查看API Differences Report。
 
-要注意的是可选择的三方依赖已经升到最小2010/2011（就是说Spring4集成仅支持2010年及之后的发行版本）
+要注意的是可选择的三方依赖已经升到最小2010/2011（就是说Spring4集成仅支持2010年及之后的发行版本）：尤其是hibernate 3.6+，EhCache 2.1+，Quartz 1.8+， Groovy 1.8+以及Joda-Time 2.0+。规则中有一个例外，Spring 4.0要求当前的Hibernate Validator的版本为4.3+，同时对Jackson的支持现在集中在2.0+版本（对Jackson 1.8/1.9的支持到Spring 3.2都有保留；现在只是设置成了过时形式）。
+
+#### 3.3 Java 8（以及6和7）
+
+Spring 4.0 支持Java 8 的一些特性。你可以在Spring的回调接口里使用lambda表达式和方法引用。这是对java.time(JSR)最优先的支持。一些已有的注解已经改成了@Repeatable。你也可以使用Java 8 的参数名发现作为一个替代方案来在调试信息可用的时候来编译你的代码。
+
+Spring保留对老版本的Java和JDK的兼容：具体包括Java SE 6(需要说的是JDK 6 的最小版本为2010年一月份发布的update18) 以及上都仍在全部支持。但是对于新开始的基于Spring 4 的开发项目，我们建议使用Java 7 或 8。
