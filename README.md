@@ -449,3 +449,78 @@ Spring保留对老版本的Java和JDK的兼容：具体包括Java SE 6(需要说
 Java EE 6及以上正在被考虑和其有特殊关联的JDA 2.0、Servlet 3.0规范作为Spring Framework 4的基础。为了保持对Google App Engine和较老的应用服务的兼容性，允许在Servlet 2.5中部署Spring 4.0 的应用。但还是强烈建议使用Servlet 3.0+，同时也是开发环境中为了测试而安装Spring测试和模拟包的首要条件。
 
 如果你是一个WebSphere7用户，请确认安装了JPA2.0功能包。WebLogic 10.3.4及以上版本需要安装JPA2.0的补丁包。这些服务器的改变都集成到了Spring4的兼容部署环境中。
+
+一个更前瞻性的点是现在Spring Framework 4.0支持适用于JavaEE7的的规范：特别是JMS 2.0，JTA 1.2，JPA 2.1，Bean Validtion 1.1以及JSR-236 Concurrency Utilities。一般来说这些支持致力于这些规范的单独使用，比如在tomcat或一个独立的环境中。但是当Spring应用被部署到Java EE 7的服务器上时，它工作的同样很好。
+
+要注意的是hibernate4.3是JPA 2.1的实现，因此只在Spring 4.0中被支持。一样的是hibernate 5.0是 Bean Validtion 1.1的实现。以上两个都没有在Spring Framework 3.2上正式支持。
+
+#### 3.5 Groovy Bean Definition DSL
+
+从Spring Framework 4.0开始，可以使用Groovy DSL来定义bean配置。概念上有点像使用XML bean定义，但Groovy DSL使用的语法更简洁。使用Groovy可以很轻松的把bean的定义直接嵌入到引导代码中。比如：
+```
+def reader = new GroovyBeanDefinitionReader(myApplicationContext)
+reader.beans {
+    dataSource(BasicDataSource) {
+        driverClassName = "org.hsqldb.jdbcDriver"
+        url = "jdbc:hsqldb:mem:grailsDB"
+        username = "sa"
+        password = ""
+        settings = [mynew:"setting"]
+    }
+    sessionFactory(SessionFactory) {
+        dataSource = dataSource
+    }
+    myService(MyService) {
+        nestedBean = { AnotherBean bean ->
+            dataSource = dataSource
+        }
+    }
+}
+
+```
+
+要了解更多信息查看GroovyBeanDefinitionReader的javadoc。
+
+#### 3.6 核心容器的改进
+
+下面是核心容器的一些改进：
+
+- Spring现在在注入Bean时会将通用的类型作为预选（qualifier）形式。比如你正在使用 Spring Data Repository，这时候你可以很容易的注入一个特定的实现:
+
+```
+@Autowired Repository<Customer> customerRepository. 
+```
+
+- 如果你使用Spring的meta-annotation，那你现在就可以开发自定义的注解， 从原始的注解中暴露特定的属性。
+
+- Bean现在只有在被装配到集合和数组中的时候才能被订阅。同时支持@Order注解和Ordered接口。
+
+- 注解@Lazy现在可以在注入点和@Bean定义上使用了。
+
+- 使用基于Java的配置开发时引入了注解@Description。
+
+- 通过@Conditional注解加入了条件过滤bean的粗糙模型。这很像@Profile，但@Confidition允许以编程的方式来开发用户自定义的策略。
+
+- 基于CGLIB的代理类不再要求默认的构造方法。这是通过objenesis类库提供支持的，该类库已经作为Spring Framework的一部分以内联的方式重新打包并发布。使用该策略，就不再为代理实例调用任何构造方法。
+
+- 现在可以通过框架来管理时区了，比如在LocaleContext上。
+
+#### 3.7 Web改进概况
+
+部署Servlet 2.5服务器保留了一个选择，但在Spring Framework 4.0中，已经以部署Servlet 3.0环境为主。如果你正在使用Spring MVC Test Framework 你需要确认在你的测试classpath中已经有了一个Servlet 3.0的兼容jar包。
+
+除了后面提到的WebSocket支持，其他的改进情况已经加入到了Spring的Web模块中：
+
+- 你可以在Spring MVCY应用中使用新的@RestController注解，已经不需要在你的每个@RequestMapping方法上加上@ResponseBody了。
+
+- 加入了AsyncRestTemplate类，提供了在开发REST客户端时的非阻塞异步支持。
+
+- 在开发Spring MVC应用时，Spring提供了完整的时区支持。
+
+#### 3.8 WebSocket, SockJS,and STOMP Messaging
+
+web应用中基于WebSocket的客户端与服务端的双向交流，在新模块spring-websocket提供了全面的支持。它兼容JSR-356，Java WebSocket API。此外，提供了基于SocketJS的回退选择（即WebSocket模拟），用于尚未支持WebSocket协议的浏览器（比如 IE 10之前的的版本）。
+
+新模块spring-messaging对STOMP提供了支持，在应用中作为WebSocket的子协议与一个用于路由的注解编程模型和处理来自WebSocket客户端的STOMP消息一起使用。因此，现在一个@Controller可以包含@RequestMapping和@MessageMapping两种方法，用于处理在联的WebSocket客户端的HTTP请求和消息。新模块也包含了原来的重要抽象，比如Spring集合项目中的Message,MessageCannel，MessageHandler以及其他作为基础服务用于基于消息的应用。
+
+要进一步了解细节，包括更多的介绍，查看第26张WebSocket支持。
