@@ -523,7 +523,7 @@ web应用中基于WebSocket的客户端与服务端的双向交流，在新模�
 
 新模块spring-messaging对STOMP提供了支持，在应用中作为WebSocket的子协议与一个用于路由的注解编程模型和处理来自WebSocket客户端的STOMP消息一起使用。因此，现在一个@Controller可以包含@RequestMapping和@MessageMapping两种方法，用于处理在联的WebSocket客户端的HTTP请求和消息。新模块也包含了原来的重要抽象，比如Spring集合项目中的Message,MessageCannel，MessageHandler以及其他作为基础服务用于基于消息的应用。
 
-要进一步了解细节，包括更多的介绍，查看第26张WebSocket支持。
+要进一步了解细节，包括更多的介绍，查看第26章WebSocket支持。
 
 #### 3.9 测试改进
 
