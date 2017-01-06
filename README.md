@@ -533,7 +533,7 @@ web应用中基于WebSocket的客户端与服务端的双向交流，在新模�
 
 - 现在可以以编程的方式来管理活动bean的定义配置文件，实现一个自定义的ActiveProfilesResolver，并通过@ActiveProfiles的resolver属性来注册就可以了。
 
--在spring-core模块中新引入了一个SocketUtils类，它可以让你扫描本机上空闲的TCP和UDP服务端口。该功能不是在具体的测试，但在编写需要用到sockets的集成测试时，可以很有帮助，比如测试启动一个SMTP存储服务器,FTP服务器，Servlet容器等等。
+- 在spring-core模块中新引入了一个SocketUtils类，它可以让你扫描本机上空闲的TCP和UDP服务端口。该功能不是在具体的测试，但在编写需要用到sockets的集成测试时，可以很有帮助，比如测试启动一个SMTP存储服务器,FTP服务器，Servlet容器等等。
 
 - 在Spring 4.0中，org.springframework.mock.web包内的模拟集合现在已经基于Servlet 3.0了。同时一些Servlet API 的模拟测试（比如MockHttpServletRequest，MockServletContext等等）进行了一些增强性的更新以及改进了可配置性。
 
