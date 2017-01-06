@@ -524,3 +524,20 @@ web应用中基于WebSocket的客户端与服务端的双向交流，在新模�
 新模块spring-messaging对STOMP提供了支持，在应用中作为WebSocket的子协议与一个用于路由的注解编程模型和处理来自WebSocket客户端的STOMP消息一起使用。因此，现在一个@Controller可以包含@RequestMapping和@MessageMapping两种方法，用于处理在联的WebSocket客户端的HTTP请求和消息。新模块也包含了原来的重要抽象，比如Spring集合项目中的Message,MessageCannel，MessageHandler以及其他作为基础服务用于基于消息的应用。
 
 要进一步了解细节，包括更多的介绍，查看第26张WebSocket支持。
+
+#### 3.9 测试改进
+
+除了在spring-test模块中整理过时的代码，Spring Framework 4.0在单元测试和集成化测试中引入了一些新的特性。
+
+- 几乎所有的注解在spring-test模块中（比如@ContextConfiguration,@WebAppConfiguration,@ContextHierarchy,@ActiveProfiles等等）都能当做meta-annotation使用，来创建自定义的组合注解，并通过一套测试来减少重复配置。
+
+- 现在可以以编程的方式来管理活动bean的定义配置文件，实现一个自定义的ActiveProfilesResolver，并通过@ActiveProfiles的resolver属性来注册就可以了。
+
+-在spring-core模块中新引入了一个SocketUtils类，它可以让你扫描本机上空闲的TCP和UDP服务端口。该功能不是在具体的测试，但在编写需要用到sockets的集成测试时，可以很有帮助，比如测试启动一个SMTP存储服务器,FTP服务器，Servlet容器等等。
+
+- 在Spring 4.0中，org.springframework.mock.web包内的模拟集合现在已经基于Servlet 3.0了。同时一些Servlet API 的模拟测试（比如MockHttpServletRequest，MockServletContext等等）进行了一些增强性的更新以及改进了可配置性。
+
+### Spring Framework 4.1新特性及增强
+
+#### 4.1 JMS改进
+
