@@ -537,7 +537,54 @@ web应用中基于WebSocket的客户端与服务端的双向交流，在新模�
 
 - 在Spring 4.0中，org.springframework.mock.web包内的模拟集合现在已经基于Servlet 3.0了。同时一些Servlet API 的模拟测试（比如MockHttpServletRequest，MockServletContext等等）进行了一些增强性的更新以及改进了可配置性。
 
-### Spring Framework 4.1新特性及增强
+### 4. Spring Framework 4.1新特性及增强
 
 #### 4.1 JMS改进
 
+Spring 4.1引入了一个很简单的基础结构，使用@JmsListener注解bean的方法来注册JMS监听器端。增加了XML命名空间来支持这种新的风格（jms:annotation-driven），并且可以使用Java配置（@EnableJms，JmsListenerContainerFactory）配置全部的基础结构。也可以使用JmsListenerConfigurer以编程化的方式注册监听端。
+
+Spring 4.1也整理了自己的JMS支持，让你可以与 4.0引入的spring-messaging抽象相适应，就像下面这样：
+
+- 消息监听端点签名会更加灵活，并且可以从诸如@Payload，@Header，@Headers，@SendTo的标准消息注解中受益。使用标准的消息代替javax.jms.Message作为方法参数会更适合。
+
+- 可以获取一个新接口JmsMessageOperations，并且允许像使用Message抽象操作一样使用JmsTemplate。
+
+最后，Spring 4.1的一些其他的改进：
+
+- 同步请求-回复操作支持JmsTemplate
+
+- 监听优先级可以在每个<jms:listener>标签中说明。
+
+- 消息监听容器的恢复操作通过使用一个BackOff实现来配置。
+
+- JMS 2.0 支持分享消费者。
+
+#### 4.2 缓存改进
+
+Spring 4.1使用Spring已有的缓存配置和基础层抽象可以支持JCache(JSR-107)注解；使用标准的注解没有任何变化。
+
+Spring 4.1 显著的改善了自已的缓存抽象：
+
+- 运行时可以使用CacheResolver来解析缓存。这样就不再需要强制性的定义缓存名称的参数value。
+
+- 更加自定义的操作级别：缓存解析器，缓存管理器，密钥生成
+
+- 新的类级别注解@CacheConfig允许在没有任何可用缓存操作的类级别分享通用配置。
+
+- 使用CacheErrorHandler处理被缓存的方法可以获取更好的体验。
+
+在Spring 4.1的缓存接口中加入了putIfAbsent方法，这是一个突破性的变化。
+
+#### 4.3 Web改进概况
+
+- 将已有的以ResourceHttpRequestHandler为基础的资源处理，通过新的抽象类ResourceResolver，ResourceTransformer和ResourceUrlProvider进行了扩展。许多内置的实现都支持版本化的URL（为了有效的HTTP缓存），gzip压缩资源定位，生成一个HTML5的AppCache体现，等等。查看第22.16.9节，“资源服务”。
+
+- 为@RequestParam，@RequestHeader，@MatrixVariable的控制器方法参数增加了JDK1.8的java.util.Optional的支持。
+
+- 在目前已经返回ListenableFuture了的基础服务（也可能是调用AsyncRestTemplate）中增加了ListenableFuture来代替DeferredResult作为返回值。
+
+- 现在带有@ModelAttribute注解的方法的调用已经遵循内部相互依赖的顺序。查看 SPR-6299。
+
+- 在@ResponseBody和ResponseEntity的控制器方法中支持了Jackson的@JsonView注解，用于为相同的POJO(比如简介和详情页的比较)序列化大量不同的详细信息。同时增加序列化视图类型，作为一个特殊属性下的model属性，用于支持基于视图的渲染。查看 “Jackson序列化视图”的张杰。
+
+- 通过Jackson来支持JSONP。查看“Jackson JSONP支持”章节。
