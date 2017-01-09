@@ -588,3 +588,72 @@ Spring 4.1 显著的改善了自已的缓存抽象：
 - 在@ResponseBody和ResponseEntity的控制器方法中支持了Jackson的@JsonView注解，用于为相同的POJO(比如简介和详情页的比较)序列化大量不同的详细信息。同时增加序列化视图类型，作为一个特殊属性下的model属性，用于支持基于视图的渲染。查看 “Jackson序列化视图”的张杰。
 
 - 通过Jackson来支持JSONP。查看“Jackson JSONP支持”章节。
+
+- 新增了一个生命周日，用来在控制器的方法返回值之后和写入相应之前拦截@Responsebody和ResponseEntity注解了的方法。声明一个实现ResponseBodyAdvice的注解了@ControllerAdvice的bean。内置的对@JsonView和JSONP的支持就是使用的该方法。查看第22.4.1章“使用HandlerInterceptor拦截请求”。
+
+- 新增三个HttpMessageConverter选择：
+
+    - Gson：比Jackson更轻量级；已经应用在Spring Android中了。
+
+    - Google Protocol Buffers ：企业级高效的内部服务数据交换协议，也可公开后作为JSON和XML用于浏览器。
+
+    - 基于XML序列化的Jackson可通过jackson-dataformat-xml扩展获取支持。如果classpath中有jackson-dataformat-xml，那么就会默认使用Jackson来代替JAXB2。
+
+- 诸如JSP的视图层现在可以将名字引用到controller的映射中来构建与controller的链接了。每个@RequestMapping都有一个默认的名字。比如FooController中有一个方法handleFoo，那它的名字就是“FC#handleFoo”。命名规则是可以插入的，可以使用它的name属性来显示的命名。在Spring JSP标签库中新增了一个mvcUrl函数，可以让这种方法在JSP页面中更容易使用。查看 22.7.2章，“从视图层构建URI链接到控制器和方法”。
+
+- @ResponseEntity提供了一个构建方式的API来引导控制器的方法指向已经准备好的服务器端相应，比如ResponseEntity.ok()。
+
+- RequestEntity是一个新的类型，提供了构建方式的API，用于引导客户端REST代码指向已经准备好的HTTP请求。
+
+- MVC java 配置和XML命名空间：
+
+    - 视图解析器现在可以进行包括支持内容协商在内的配置了。
+
+    - 视图控制器现在内置了重定向支持以及设置相应状态。应用可以在视图中使用视图控制器配置重定向URL，渲染404，发送“no content”的相应等等。
+
+    - 更友好的内置自定义路径匹配。
+
+- Groovy构建模板支持（基于Groovy 2.3）。查看GroovyMakeupConfigure和各自的ViewResolver以及“View”的实现。
+
+### 4.4 WebSocket Messaging Improvements
+
+- SocketJS(java) 客户端支持。看SocketJsClient和相同包下的类。
+
+- 新的应用程序上下文事件SessionSubscribeEvent和SessionUnscribeEvent在STOMP客户端订阅和非订阅时发生。
+
+- 新的“websocket”scope。看第26.4.15节“WebSocket Scope”
+
+- @SendToUser可以仅定位一个session并且不需要授权用户.
+
+- @MessageMapping方法可以使用“.”来代替“/”作为路径分割。看SPR-11660。
+
+- STOMP/WebSocket监控信息的收集和日志记录。查看第26.4.17节“运行时监控”。
+
+- 显著优化和改善了日志，即使在调试级别也应该保持高可读性和紧凑性。
+
+- 优化了消息的创建，包括支持可变性临时消息，避免自动生成的消息ID以及时间戳生成。查看MessageHeaderAccessor的Javadoc。
+
+- WebSocket session建立60秒内没有活动，关闭STOMP/WebSocket session。查看SPR-11884。
+
+### 4.5 Testing Improvements
+
+- 在TestContext framework中可以使用Groovy脚本配置集成测试的ApplicationContext加载。
+
+    - 查看“Context configruration with Groovy script”章节了解详情。
+
+- 通过新的API TestTransaction，测试管理的事务在事务化的测试方法中可以以编程的方式启动和结束。
+
+    - 查看“Programmactic transaction management”了解详情。
+
+- 使用新的注解@Sql和@SqlConfig可以在每个类或者每个方法的基础上声明式的配置SQL脚本执行。
+
+    - 查看第15.5.8节“执行SQL脚本”了解详情。
+
+- 自动重写系统的测试属性源和应用属性源可以通过新注解@TestPropertySource进行配置。
+
+    - 查看“COntext configuration with test property source”了解详情。
+
+- 
+    - 查看“Automatic discovery of default TestExecutionListeners”了解详情。
+
+- 
