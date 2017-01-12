@@ -653,7 +653,104 @@ Spring 4.1 显著的改善了自已的缓存抽象：
 
     - 查看“COntext configuration with test property source”了解详情。
 
-- 
+- 现在可以自动发现默认的TestExecutionListener。
+
     - 查看“Automatic discovery of default TestExecutionListeners”了解详情。
 
-- 
+- 自定义的TestExecuteListener现在可以自动的合并到默认的监听器了。
+
+    - 查看“TestExecutionListener合并”章节了解详情。
+
+- TestContext framework里的事务测试支持的文档进行了更充分的解释，同时增加了更多的示例。
+
+    - 查看第 15.5.7节“事务管理”了解详情。
+
+- 改进了一些MockServletContext，MockHttpServletRequest以及其他Servlet API的模拟。
+
+- 重构了AssertThrows用于支持Trowable替换Exception。
+
+- 在Spring MVC Test中， 可以JSON Assert来断言JSON响应，作为额外的选择来使用JSONPath，就像使用XMLUnit为XML做的那样。
+
+- 可以在MockMvcConfigurer的帮助下创建McokMvcBuilder。加入这个的目的是在应用Spring Security设置的时候使其更容易，同时可以用于为第三方框架或在一个项目里封装通用的配置。
+
+- MockRestServiceServer现在为客户端测试增加了AsyncRestTmeplate支持。
+
+
+### 5. Spring 4.2中的新特性和增强
+
+#### 5.1 Core Container Improvements
+
+- 诸如@Bean的注解通过检测，并且默认使用Java8的方法处理，允许使用默认的@Bean方法从接口创建一个配置类。
+
+- 配置类可以使用规范的组件类来声明@Import，允许导入混合的配置类和组件类。
+
+- 配置类可以声明一个@Order value，即使通过classpath扫描检测，也可以按照相应的顺序进行处理（比如根据名字重写bean）。
+
+- @Resource注入点支持@Lazy声明，类似@Autowired为请求目标bean接收懒初始化代理。
+
+- 应用的事件基础层现在提供了一个基于注解的模型以及发布任何任意事件的功能。
+
+    - 任何受管理的bean的public方法都可以使用@EventListener进行注解。
+
+    - @TransactionEventListener提供了事物绑定事件的支持。
+
+- Spring Framework 4.2 为声明和查找注解属性的别名引入了非常好的支持。新的注解@AliasFor可以用一个注解声明一对别名属性，或者将一个自定义组合注解的属性声明为一个元注解属性的别名。
+
+    - 下列注解已经用@AliasFor进行了重新修改，用于为他们的值属性提供有意义的别名：@Cacheable, @CacheEvict, @CachePut, @ComponentScan, @ComponentScan.Filter, @ImportResource, @Scope, @ManagedResource, @Header, @Payload, @SendToUser, @ActiveProfiles, @ContextConfiguration, @Sql, @TestExecutionListeners, @TestPropertySource, @Transactional,@ControllerAdvice, @CookieValue, @CrossOrigin, @MatrixVariable, @RequestHeader, @RequestMapping, @RequestParam, @RequestPart, @ResponseStatus, @SessionAttributes, @ActionMapping, @RenderMapping, @EventListener, @TransactionalEventListener。
+
+    - 比如，spring-test模块中的@ContextConfiguration现在可以按下面的方式声明：
+
+    ```
+    public @interface ContextConfiguration {
+
+        @AliasFor("locations")
+        String[] value() default {};
+
+        @AliasFor("value")
+        String[] locations() default {};
+
+        // ...
+    }
+    ```
+
+    - 同样，组合注解重写元注解的属性现在可以使用@AliasFor进行细粒度的精确控制，这样属性会在注解层的内部被重写。实际上，现在可以为元注解的value属性声明一个别名。
+
+    - 比如，现在可以编写一个带有自定义属性的组合注解，并按照下面的方式重写。
+
+    ```
+    @ContextConfiguration
+    public @interface MyTestConfig {
+
+        @AliasFor(annotation = ContextConfiguration.class, attribute = "value")
+        String[] xmlFiles();
+
+        // ...
+    }
+
+    ```
+
+    - 查看Spring Annotation Programming Model。
+
+- 改进了Spring的一些用于查找原注解的搜索算法。比如，声明局部组合注解现在更倾向于继承注解。
+
+- 重写元注解属性的组合注解现在可以从interface，abstract，bridge模式，@interface以及类里，标准的方法里，构造方法里，成员变量里找到。
+
+- 可以将多个注解属性合并（转换）表示在同一个注解中，（和AnnotationAttributes实例）。
+
+- 基于成员变量的数据绑定（DirectFieldAccessor）功能已经与当前基于属性的数据绑定（BeanWrapper）保持一致。特别是现在基于field的绑定支持对Collections，Arrays，Maps的导航。
+
+- DefaultConversionService现在为Stream，Charset，Currency以及TimeZone提供快捷的转换功能。此类转换也可以单独添加到任何任意的ConversionService中。
+
+- DefaultFormattingConversionService为JSR-354 Money以及Currency(classpath中已经存在“javax.money”API）的值类型：命名，MonetaryAmount以及CurrencyUnit提供了很好的支持。该功能包括对应用@NumberFormat的支持。
+
+- @NumberFormat现在可以当做meta-annotation来使用。
+
+- JavaMailSenderImpl新增了一个方法testConnection()，用来检测连接服务器。
+
+- ScheduledTaskRegistrar暴露了计划任务。
+
+- Apache commons-pool2已支持AOP池CommonsPool2TargetSource。
+
+- 通过在XML里暴露lang:std，为脚本化的bean引入了StandardScriptFactory作为基于JSR-223的机制。支持JavaScript和JRuby等等。（注意：JRubyScriptFactory和lang:jruby现在已经过时了，建议使用JSR-223）。
+
+#### 5.2 Data Access Improvements
