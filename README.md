@@ -754,3 +754,83 @@ Spring 4.1 显著的改善了自已的缓存抽象：
 - 通过在XML里暴露lang:std，为脚本化的bean引入了StandardScriptFactory作为基于JSR-223的机制。支持JavaScript和JRuby等等。（注意：JRubyScriptFactory和lang:jruby现在已经过时了，建议使用JSR-223）。
 
 #### 5.2 Data Access Improvements
+
+- 通过AspectJ提供javax.transaction.Transactional支持。
+
+- SimpleJdbcCallOperations现在支持命名绑定。
+
+- 完全支持Hibernate ORM 5.0：作为JPA提供者，以及访问Hibernate原生API(已用新的包org.springframework.orm.hibernate5覆盖)。
+
+- 嵌入式数据库现在可以自动分配唯一的名字，并且<jdbc:embedded-database>增加支持了一个新的属性database=name。查看下面的“Testing Improvments” 进一步了解详情。
+
+#### 5.3 JMS Improvements
+
+- 可以通过JmsListenerContainerFactory控制autoStartup属性。
+
+- Destination回复的类型现在可以在每个监听容器中配置。
+
+- @SendTo注解的值现在可以使用Spring的EL表达式了。
+
+- 相应地址现在可以在运行时使用JmsResponse进行计算。
+
+- @JmsListener已是一个可重复的注解了，可以在同一个方法上声明几个JMS容器（如果你还没在用Java8，就要引用新的@JmsListeners）。
+
+#### 5.4 Web Improvements
+
+- HTTP流和Server-Sent Event支持，查看“HTTP Streaming”章节。
+
+- 内建CORS支持，包括全局（MVC Java 配置和XML命名空间）和本地（比如@CrossOrigin）的配置，查看第27章“CORS支持”了解详情。
+
+- HTTP缓存升级：
+
+    - 新的CacheControl builder；加在了ResponseEntity，WebContentGenerator，ResourceHttpRequestHandler。
+
+    - 在WebRequest里改进了ETag/Last-Modified支持。
+
+- 自定义映射注解，将@RequestMapping作为元注解。
+
+- 在运行时注册和注销AbstractionHandlerMethodMapping中的public方法。
+
+- AbstractDispatcherServletInitializer中的protected方法createDispatcherServlet进一步自定义DispatcherServlet实例来使用。
+
+- HandlerMethod作为@ExceptionHandler方法的一个方法参数，特别是在@ControllerAdvice组件中方便。
+
+- java.util.concurrent.CompletableFuture成为@Controller方法的返回值类型。
+
+- HttpHeaders字节范围请求支持，以及静态资源服务。
+
+- 嵌套exception的@Response检测。
+
+- RestTemplate中的UriTemplateHandler扩展点。
+
+    - DefaultUriTemplate暴露了baseUrl属性和路径段编码选项。
+
+    - 扩展点同样可以用于插入到任何URI模板库。
+
+- 在RestTemplate中集成了OkHTTP。
+
+ - 自定义的baseUrl，用于在MvcUriComponentsBuilder的方法中替换。
+
+ - 序列化/反序列化的异常消息现在记录为WARN级别。
+
+- 默认的JSON前缀已经从“{}&&” 改为更阿奴按的“)]}',”。
+
+- 新的RequestBodyAdvice扩展点；支持Jackson的内置实现，用于@RequestBody方法参数上的@JsonView。
+
+- 使用GSON或者Jackson2.6以上的时候，处理方法的返回类型用于如List<Foo>的序列化的参数类型。
+
+- 为脚本话的web视图引入ScriptTemplateView作为基于JSR-223的机制，重点引入了Nashorn(JDK8)的JavaScript视图模板。
+
+##### 5.5 WebSocket Messaging Improvments
+
+- 暴露存在的已连接的用户和订阅的信息：
+
+    - 新暴露了一个叫“userRegistry”的SimpUserRegistry bean。
+
+    - 使用集群服务共享实时信息（查看代理中继配置选项）。
+
+- 使用集群服务解析用户地址（查看代理中继配置选项）。
+
+- StompSubProtocolErrorHandler扩展点对客户端进行自定义化及控制其STOMP ERROR帧。
+
+- 
