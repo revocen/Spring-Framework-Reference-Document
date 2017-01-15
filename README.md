@@ -821,7 +821,7 @@ Spring 4.1 显著的改善了自已的缓存抽象：
 
 - 为脚本话的web视图引入ScriptTemplateView作为基于JSR-223的机制，重点引入了Nashorn(JDK8)的JavaScript视图模板。
 
-##### 5.5 WebSocket Messaging Improvments
+#### 5.5 WebSocket Messaging Improvments
 
 - 暴露存在的已连接的用户和订阅的信息：
 
@@ -832,5 +832,78 @@ Spring 4.1 显著的改善了自已的缓存抽象：
 - 使用集群服务解析用户地址（查看代理中继配置选项）。
 
 - StompSubProtocolErrorHandler扩展点对客户端进行自定义化及控制其STOMP ERROR帧。
+
+- 通过@ControllerAdvice组件实现全局@MessageExceptionHandler方法。
+
+- 使用SimpleBrokemrMessageHandler支持订阅心跳和SpEL表达式“selector” heador。
+
+- 在TCP和WebSocket上使用STOMP客户端。查看第26.4.14章“STOMP Client”。
+
+- @SendTo和@SendToUser可以包含地址变量占位符。
+
+- 在@MessageMapping和@SubscribeMapping方法使用Jackson的@JsonView为返回值提供支持。
+
+- @MessageMapping和@SubscribeMapping方法中ListenableFuture和CompletableFuture作为返回值类型。
+
+- 为XML有效负荷提供MarshallingMessageConverter。
+
+#### 5.6 Test Improvements
+
+- 基于JUnit的单元测试可以使用JUnit规则代替SpringJUnit4ClassRunner执行。基于Spring的集成测试可以替换运行的runner，诸如JUnit的Parameterized或第三方的runners（比如MockitoJUnitRunner）。
+
+    - 查看“Spring JUnit 4 Rules”章节了解详情。
+
+-  Spring MVC Test框架对HtmlUnit提供很好的支持，包括集成Selenium的WebDriver，运行基于页面的web应用测试，而不需要部署到Servlet容器中。
+
+    - 查看第15.6.2章“HtmlUnit Integration”了解更多。
+
+- AopTestUtils，一个新的测试工具，允许开发者获取一个潜藏对象的引用，这些对象隐藏在一个或多个Spring代理后面。
+
+    - 查看第14.2.1章“General testing utilities”了解更多。
+
+- ReflectionTestUtils现在支持设置获取static字段（包括常量）。
+
+- 使用@ActiveProfiles保留了bean定义声明配置文件的原始顺序，用以支持一些情况，比如Spring Boot中基于活动配置文件的名字来加载配置文件的的ConfigFileApplicationListener。
+
+- @DirtiesContext支持新的BEAORE_METHOD,BEFORE_CLASS以及BEFORE_EACH_TEST_METHOD模式，用来在测试前关闭ApplicationContext——比如一些垃圾测试（还没有确定的）有大量的测试，破坏了ApplicationContext原始的配置。
+
+- 新注解@Commit，用于直接替换@Rollback(false)。
+
+- @Rollback现在用于配置类级别的默认回滚语义。
+
+    - 因此，@TransactionConfiguration已经过时了，并会在之后的版本中去掉。
+
+- 使用一个新的statements属性，@Sql支持执行内嵌SQL声明。
+
+- ContextCache现在是一个public API，用于测试中缓存ApplicationContext。这是一个默认的实现，可以根据实际自定义的缓存需要进行替换。
+
+- DefaultTestContext,DefaultBootstrapContext和DefaultCacheAwareContextLoaderDelegate在support子包中为public类，允许自定义扩展。
+
+- TestContextBootstrapper负责构建TestContext。
+
+- 在Spring MVC Test框架中，MvcResult的详细情况可以被记录为DEBUG级别或者写到自定义的OutputStream或Writer。查看MockMvcResultHandlers中新的log()，print(OutputStream)和print(Writer)方法了解详情。
+
+- 在JDBC XML命名空间 <jdbc:embedded-database>中增加支持了一个新的database-name属性。允许开发者为嵌入式数据库设置唯一的名字--比如使用SpEL表达式或属性占位符就可以配当前活动bean定义配置文件感应到。
+
+- 嵌入式数据库可以自动的调整为一个唯一的名字，允许在不同的ApplicationContext中使用一个测试组合复用通用的数据库测试配置。
+
+    - 查看第19.8.6节“Generating unique names for embedded databases”了解更多。
+
+- MockHttpServletRequest和MockHttpServletResponse通过getDateHeader和setDateHeader方法对数据头格式化提供了更好的支持。
+
+
+### 6 Spring Framework 4.3新特性及增强
+
+#### 6.1 Core Container Improvements
+
+- 核心容器异常提供更丰富的元数据，以便程式化的评估。
+
+- Java 8 默认方法作为bean属性getter/setter来检测。
+
+- 如果注入一个主bean，就不会创建惰性候选bean。
+
+- 如果目标bean只定义了一个构造方法，就不再需要再指定@Autowired注解。
+
+- @Configuration类支持构造注入。
 
 - 
