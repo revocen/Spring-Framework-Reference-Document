@@ -906,4 +906,128 @@ Spring 4.1 显著的改善了自已的缓存抽象：
 
 - @Configuration类支持构造注入。
 
-- 
+- 任何用于指定一个@EventListener的condition的SpEL表达式现在可以引用到bean了（比如，@beanName.method()）。
+
+- 组合注解现在可以在元注解中使用一个单一的数组组件类型重写这个数组属性。比如，@RequestMapping的String [] path属性可以在组合注解中使用String path重写。
+
+- 如果以@PersistenceContext/@PersistenceUnit方式声明，就会选择一个基本的EntityManagerFactory bean。
+
+- @Scheduled和@Schedules可以作为元注解使用，通过属性重写可以创建自定义的组合注解。
+
+- @Schedule在bean的所有scope中都可以完全支持。
+
+
+#### 6.2 Data Access Improvements
+
+- jdbc:initialize-database和jdbc-embedded-database提供了一个可配置的分隔符应用在每个脚本中。
+
+#### 6.3 Caching Improvements
+
+Spring 4.3允许并发调用一个经同步的给定key，这样value就仅计算一次。@Cacheable中可以通过新的sync属性开启一个可选择加入的功能。该功能是Cache接口中一个重大的改动，在接口中以get(Object key, Callable<T> valueLoader)方法引入。
+
+Spring 4.3同时改进了缓存抽象层，如下：
+
+    - 现在在caches-related注解中SpEL表达式可以引用到bean里了（即@beanName.method()）。
+
+    - 使用新属性storeByValue，ConcurrentMapCacheManager和ConcurrentMapCache增加支持了缓存项的序列化。
+
+    - @Cacheable,@CacheEvent,@CachePut以及@Caching可以作为元注解使用，通过属性重写可以创建自定义的组合注解。
+
+#### 6.4 JMS Improvements
+
+- @SendTo可以指定在类级别，用来共享通用的回复地址。
+
+- @JmsListener和@JmsListeners可以作为元注解来使用，通过属性重写可创建自定义的组合注解。
+
+#### 6.5 Web Improvements
+
+- 为HTTP HEAD和HTTP OPTIONS提供内建支持。
+
+- @RequestMapping新的组合注解@GetMapping,@PostMapping,@PutMapping,@DeleteMapping,@PatchMapping。
+
+    - 查看“Composed @RequestMapping Variants”了解更多
+
+- 新的web scope组合注解@RequestScope,@SessionScope以及@ApplicationScope。
+
+    - 查看Requst scope,Session scope,以及Application scope 了解更多。
+
+- 新注解@RestControllerAdvice结合@ControllerAdvice和@ResponseBody的语义。
+
+- 类级别支持@ResponseStatus，并且可以被所有方法继承。
+
+- 新注解@SessionAttribute，用于访问session属性。
+
+- 新注解@RequestAttribute，用于访问request属性。
+
+- 通过binding=false属性，@ModelAttribute可以停用数据绑定。
+
+- @PathVarible可以声明为可选项（用于@ModelAttribute方法）。
+
+- 统一的错误输入以及自定义的MVC异常处理Throwables。
+
+- HTTP消息转换器中统一的字符集处理，包括在多种文本内容中默认使用UTF-8。
+
+- 在多媒体类型定义中，使用已配置的ContentNegotiationManager处理静态资源。
+
+- 通过DefaultUriTemplateHandler，RestTemplate和AsyncRestTemplate支持严格的URI变量编码。
+
+- AsyncRestTemplte支持请求拦截。
+
+#### 6.6 WebSocket Messaging Improvements
+
+- @SentTo和@SentToUser可以指定在类级别，以共享通用地址。
+
+#### 6.7 Test Improvements
+
+- Spring TestContext Framework中的JUnit支持要求JUnit 4.12及以上。
+
+- SpringJUnit4ClassRunner的新别名SpringRunner。
+
+-可以在接口上声明测试相关的注解——比如，用于使用基于Java8接口默认方法的测试接口。
+
+- 如果默认的XML文件，Groovy脚本或者@Configuration类已经检测，那么可以完全省略@ContextConfiguration的空声明。
+
+- @Transactional测试方法不再要求是public方法了（比如在TestNG和JUnit5中）。
+
+- @BeforeTransaction和@AfterTransaction的方法不再要求是public，并且可以在基础Java8的接口的默认方法上声明。
+
+- Spring TestContext Framework的ApplicationContext缓存以默认的最大值32和最近最少使用值作为阈值。最大值可以通过设置JVM系统属性或调用Spring的spring.test.context.cache.maxSize属性来配置。
+
+- 为配置一个测试ApplicationContext新增一个ContextCustomizer API，用于将bean定义加载到context之后，以及context刷新之前。配置器可以通过第三方库全局注册，前述需要实现一个自定义的ContextLoader。
+
+- @Sql和@SqlGroup可以作为元注解使用，通过属性重写实现自定义的组合注解。
+
+- ReflectionTestUtil当设置或获取一个字段时，自动打开代理。
+
+- 服务端Spring MVC Test支持对具有多个值的响应头的预期。
+
+- 服务器端Spring MVC Test解析表单数据请求内容，并填入请求参数。
+
+- 服务器端Spring MVC Test支持调用处理器方法的类似模拟的断言。
+
+- 客户端REST测试支持允许指示对一次请求的期望时间是多少，以及是否忽略期望声明的顺序。
+
+- 客户端REST测试支持对请求体中的表单数据的期望。
+
+#### 6.8 新类库和服务器的支持
+
+- Hibernate ORM 5.2(仍然支持4.2/4.3以及5.0/5.1，3.6已过时)
+
+- Hibernate Validator 5.3(向下兼容4.3)
+
+- Jackson 2.8(spring 4.3最低为2.6及以上)
+
+- OkHttp 3.x (同样支持2.x)
+
+- Tomcat 8.5以及9.0的里程牌
+
+- Netty 4.1
+
+- Undertow 1.4
+
+- WildFly 10.1
+
+此外，Spring Framework 4.3 在spring-core.jar中加入了更新后的ASM 5.1，CGLIB 3.2.4以及Objenesis 2.4。
+
+
+
