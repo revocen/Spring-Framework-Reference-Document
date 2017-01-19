@@ -1029,5 +1029,32 @@ Spring 4.3同时改进了缓存抽象层，如下：
 
 此外，Spring Framework 4.3 在spring-core.jar中加入了更新后的ASM 5.1，CGLIB 3.2.4以及Objenesis 2.4。
 
+## 第三部分 核心技术
 
+该部分包括了所有Spring Framework技术。
 
+在这些技术中最重要的是Spring Framework的Inversion of Control(IoC)容器。Spring Framework IoC容器的深入处理是紧随Spring Aspect-Oriented Programming(AOP)的完全覆盖的技术。Spring Framework有自己的AOP框架，该框架在概念上很容易理解，并且在Java企业级开发中成功的达到了AOP要求的80%。
+
+Spring也提供了对AspectJ的全面支持（是当前Java企业级开发中功能最丰富的，最成熟的AOP实现）
+
+- 第7章 IoC容器
+
+- 第8章 资源
+
+- 第9章 校验，数据绑定，类型转换
+
+- 第10章 Spring表达式语言（SpEL）
+
+- 第11章 Spring的Aspect Oriented Programming
+
+- 第12章 Spring AOP API
+
+### 7 IoC容器
+
+#### 7.1 Spring IoC容器和bean介绍
+
+该章包括Spring Framework实现Inversion of Control(IoC)的原理。IoC也叫依赖注入（DI）。这是通过其他对象定义自身依赖并工作的一个过程，该过程仅仅将构造参数，参数传入工厂方法或属性中，在构建或从工厂方法返回后，就会设置到一个对象实例上。该容器在创建bean时就会注入这些依赖。该过程实际从根本上颠倒了bean自己控制实例或者通过直接使用类的构造或诸如Service Locator模式的机制来定位自身的依赖，因此叫Inversion of Control(IoC)。
+
+org.springframework.beans和org.springframework.context包是Spring Framework IoC容器的基础。BeanFactory接口提供了一个能管理任何类型对象的高级配置管理机制。ApplicationContext是BeanFactory的一个子接口，它加入了更容易集成的Spring AOP功能；消息资源处理（用于国际化），事件发布；以及应用层中特殊的context，比如用于web应用的WebApplicationContext。
+
+简而言之，BeanFactory提供了配置框架和基础功能，ApplicationContext增加了更多的企业级的特殊功能。ApplicationContext是BeanFactory的一个超集，它仅在描述Spring IoC 容器的章节中使用。要了解更多关于使用BeanFactory来代替ApplicationContext，去看7.16节“The BeanFactory”。
