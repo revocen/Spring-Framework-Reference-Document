@@ -1058,3 +1058,34 @@ Spring也提供了对AspectJ的全面支持（是当前Java企业级开发中功
 org.springframework.beans和org.springframework.context包是Spring Framework IoC容器的基础。BeanFactory接口提供了一个能管理任何类型对象的高级配置管理机制。ApplicationContext是BeanFactory的一个子接口，它加入了更容易集成的Spring AOP功能；消息资源处理（用于国际化），事件发布；以及应用层中特殊的context，比如用于web应用的WebApplicationContext。
 
 简而言之，BeanFactory提供了配置框架和基础功能，ApplicationContext增加了更多的企业级的特殊功能。ApplicationContext是BeanFactory的一个超集，它仅在描述Spring IoC 容器的章节中使用。要了解更多关于使用BeanFactory来代替ApplicationContext，去看7.16节“The BeanFactory”。
+
+在Spring中，你的应用中作为骨干的以及被Spring IoC容器管理的对象叫做beans。bean是由Spring IoC容器实例化，汇编化以及通过其他方式管理的对象。另外，bean仅仅是你应用中众多对象中的一个。Beans和其依赖可以通过容器从configuration metadata中反射出来。
+
+#### 7.2 Container overview
+
+org.springframework.context.ApplicationContext接口表示Spring IoC容器并且负责实例化，配置以及汇编上述的beans。容器从配置的元数据中读取信息，来获取将哪个对象实例化，进行配置，以及汇编。配置的元数据在XML里，Java注解上以及Java代码中表示。并且允许你通过这些对象来表示组成你应用的对象以及这些丰富的相互依赖的对象。
+
+一些ApplicationContext借口的实现提供了Spring的简单操作。在一个独立的应用中，通常会创建一个ClassPathXmlApplicationContext或FileSystemXmlApplicationContext的实例。如果定义配置信息的元数据是传统格式，那么这个时候通过配置一些XML声明其他的元数据是否可用，就可以让容器将Java注解或代码当做元数据格式来使用。
+
+在大多数应用场景中，用户代码并不会显示的要求实例化一个或多个Spring IoC容器的实例。比如web应用场景中，对于应用而言，web.xml文件用几行简单的xml就足以描述web了（查看第7.15.4节“Convenient ApplicationContext instantiation for web applications”）。如果你郑子使用Spring Tool Suite Eclipse-powered开发环境，这个模板配置只需要点几下鼠标或敲几下键盘就可以很容易的创建。
+
+下图是Spring如何工作的概览情况。你的应用的类会通过配置元数据来组合，以便在ApplicationContext创建和初始化后，你可以有一个完整的配置以及可执行的系统或应用。
+
+##### 图 7.1 Spring IoC容器
+
+![The Spring IoC container](http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/images/container-magic.png)
+
+#### 7.2.1 Configuration metadata
+
+如上图展示的情况，Spring IoC容器需要一个configuration metadata；该configuration metadata用来表示你作为一个开发者，需要告诉Spring容器如何在你的应用中来实例化，配置以及组合这些对象。
+
+一个简单直观的XML通常会提供Configuration metadata，本章节使用大部分篇幅说明了该部分的关键内容以及Spring IoC容器的功能。
+
+基于XML的metadata不是唯一的一种方式来配置metadata。Spring IoC容器本身是从实际使用的configuration metadata的方法中充分解耦的。最近很多开发者在Spring应用中都选择了基于Java的配置。
+
+要了解Spring容器使用的其他形式的metadata，看下面：
+
+- 基于注解的配置：Spring 2.5引入了对基于注解配置的configuration metadata的支持。
+
+- 基于Java的注解：从Spring3.0开始，由Spring JavaConfig项目提供的很多特性已经成为Spring Framework的核心部分。因此你可以使用Java而不是XML文件来定义应用程序类外部的bean。要使用这些新特性，查看@Configuration,@Bean,@Import以及@DependsOn注解。
+
