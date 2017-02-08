@@ -1089,3 +1089,32 @@ org.springframework.context.ApplicationContext接口表示Spring IoC容器并且
 
 - 基于Java的注解：从Spring3.0开始，由Spring JavaConfig项目提供的很多特性已经成为Spring Framework的核心部分。因此你可以使用Java而不是XML文件来定义应用程序类外部的bean。要使用这些新特性，查看@Configuration,@Bean,@Import以及@DependsOn注解。
 
+Spring configuration定义的容器必须管理的bean的个数至少有一个，通常来说会不止一个。基于XML的configuration metadata将这些需要配置的beans作为<bean/>元素，并放到顶级元素<beans/>里面。基于Java的configuration通常在有@Configuration注解的类中使用有@Bean注解的方法。
+
+这些bean definitions对应实际构成你应用的的对象。通常你定义service层，数据访问对象（DAO），像Struts Action实例这样的presentation objects，像Hibernate SessionFactories这样的基础类型的对象，JMS Queues等等。一般在容器中并不配置细粒度的domain objects，因为这通常由DAO和业务逻辑负责创建和加载domain objects。但是你可以使用Spring集成的AspectJ来配置这些在IOC容器外部创建的objects。查看“Using AspectJ to dependency-inject domain objects with Spring”。
+
+下面实例展示了基于XML的configuation metadata的基础结构。
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="..." class="...">
+        <!-- collaborators and configuration for this bean go here -->
+    </bean>
+
+    <bean id="..." class="...">
+        <!-- collaborators and configuration for this bean go here -->
+    </bean>
+
+    <!-- more bean definitions go here -->
+
+</beans>
+
+
+```
+
+ID属性是一个用来识别单个bean定义的字符窜。class属性定义了bean的类型，并且使用类名的全路径。ID属性的值引用到协作objects（The value of the id attribute refers to collaborating objects）。上面例子中没有XML中引用到协作objects；查看"Dependencies"获取更多信息。
