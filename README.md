@@ -488,7 +488,7 @@ reader.beans {
 - Spring现在在注入Bean时会将通用的类型作为预选（qualifier）形式。比如你正在使用 Spring Data Repository，这时候你可以很容易的注入一个特定的实现:
 
 ```
-@Autowired Repository<Customer> customerRepository. 
+@Autowired Repository<Customer> customerRepository.
 ```
 
 - 如果你使用Spring的meta-annotation，那你现在就可以开发自定义的注解， 从原始的注解中暴露特定的属性。
@@ -1118,3 +1118,81 @@ Spring configuration定义的容器必须管理的bean的个数至少有一个�
 ```
 
 ID属性是一个用来识别单个bean定义的字符窜。class属性定义了bean的类型，并且使用类名的全路径。ID属性的值引用到协作objects（The value of the id attribute refers to collaborating objects）。上面例子中没有XML中引用到协作objects；查看"Dependencies"获取更多信息。
+
+
+#### 7.2.2 Instantiating a container
+
+Sping IoC container的例子很简单。将本地路径或其他路径传给一个ApplicationContext的构造函数，这些路径都是resource字符串，这些路径字符串可以让容器从许多外部的resources加载configuration metadata，这些resources可以是本地的文件系统，Java CLASSPATH等等。
+
+```
+ApplicationContext context = new ClassPathXmlApplicationContext(new String[] {"services.xml", "daos.xml"});
+```
+
+了解了Spring IoC容器之后，你要是想了解更多的关于Spring Resource抽象层的内容，可以看第8章Resource，该章提供一种方便的机制用于读取使用URI语法定义的位置的InputStream。在第8.7节 “Application contexts and Resource paths”中有描述Resource路径用在构建应用上下文的内容。
+
+
+下面的例子是service层（service.xml）的配置文件：
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- services -->
+
+    <bean id="petStore" class="org.springframework.samples.jpetstore.services.PetStoreServiceImpl">
+        <property name="accountDao" ref="accountDao"/>
+        <property name="itemDao" ref="itemDao"/>
+        <!-- additional collaborators and configuration for this bean go here -->
+    </bean>
+
+    <!-- more bean definitions for services go here -->
+
+</beans>
+```
+
+下面是数据访问对象的daos.xml文件：
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="accountDao"
+        class="org.springframework.samples.jpetstore.dao.jpa.JpaAccountDao">
+        <!-- additional collaborators and configuration for this bean go here -->
+    </bean>
+
+    <bean id="itemDao" class="org.springframework.samples.jpetstore.dao.jpa.JpaItemDao">
+        <!-- additional collaborators and configuration for this bean go here -->
+    </bean>
+
+    <!-- more bean definitions for data access objects go here -->
+
+</beans>
+```
+
+上面的例子中service层包含PetStoreServiceImpl类，以及两个数据访问对象JpaAccountDao、JpaItemDao（基于JPA的对象/关系映射标准）。property name元素是JavaBean属性的名字，ref元素是定义的另一个bean的名字。id与ref元素之间的关联阐述了协作对象之间的依赖关系。查看“Dependencies”了解更多关于配置对象依赖的信息。
+
+#### 搭建基于XML的configuration metadata
+
+使用多个XML文件来定义bean是一个很有效的做法。通常每一个XML配置文件都负责程序架构中的一个逻辑层或模块。
+
+你可以使用application context来构建所有这些XML fragment的bean definitions的加载。该构造器会获取多个Resource的位置，就像前面章节中说的。或者使用<import/>标签来从其他文件加载bean definitions。如下：
+
+```
+<beans>
+    <import resource="services.xml"/>
+    <import resource="resources/messageSource.xml"/>
+    <import resource="/resources/themeSource.xml"/>
+
+    <bean id="bean1" class="..."/>
+    <bean id="bean2" class="..."/>
+</beans>
+```
+
+上面的例子中，外部的bean definitions从这些文件中加载：service.xml，messageSourcce.xml，themeSource.xml。所有这些需要进行import的关联definition文件，像service.xml，都必须在同一个目录下或者classpath路径下。messageSource.xml，themeSource.xml文件必须放在引入文件位置下的resource location。如你所见，前面的斜杠被忽略了，表明这些路径是相对的，这种不使用斜杠的方式更好。引入文件的内容包括顶级标签<beans/>在内，必须是Spring Schema中有效的XML bean definitions。
