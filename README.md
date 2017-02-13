@@ -1196,3 +1196,31 @@ ApplicationContext context = new ClassPathXmlApplicationContext(new String[] {"s
 ```
 
 上面的例子中，外部的bean definitions从这些文件中加载：service.xml，messageSourcce.xml，themeSource.xml。所有这些需要进行import的关联definition文件，像service.xml，都必须在同一个目录下或者classpath路径下。messageSource.xml，themeSource.xml文件必须放在引入文件位置下的resource location。如你所见，前面的斜杠被忽略了，表明这些路径是相对的，这种不使用斜杠的方式更好。引入文件的内容包括顶级标签<beans/>在内，必须是Spring Schema中有效的XML bean definitions。
+
+有一点是允许但并不推荐的行为，就是在父级目录使用相对路径"../"引用文件。这样做的话就使当前的应用对引用的文件产生了依赖。需要注意的是这种引用并不推荐在“classpath:”的URLs(比如，“classpath:../services.xml”)，当运行时解析处理选择这个“最近”的classpath根路径，然后进入他的父级目录查找。Classpath配置的改变可能会导致选择一个不同的错误的目录。你要尽量使用全路径资源定位来代替相对路径：比如“file:C:/config/services.xml”或者“classpath:/config/services.xml”。但你也要知道设成绝对路径会让应用产生耦合。通常来说，会优先将这些绝对路径设成间接形式，比如针对在运行时的JVM系统属性，使用“${}”占位符来解决问题。
+
+Import指令是由beans命名空间自身提供的一个功能。并且配置功能不仅可以使用plain bean definitions，也可以在Spring提供的一些XML命名空间中使用，比如“context”和“util”命名空间。
+
+#### The Groovy Bean Definition DSL
+
+作为外部configuration metadata的另一个例子，根据Grails框架可以知道，bean definitions同样可以在Spring的Groovy Bean Definition DSL中表示。一般这样的配置都会放在.groovy文件中，格式如下：
+```
+beans {
+    dataSource(BasicDataSource) {
+        driverClassName = "org.hsqldb.jdbcDriver"
+        url = "jdbc:hsqldb:mem:grailsDB"
+        username = "sa"
+        password = ""
+        settings = [mynew:"setting"]
+    }
+    sessionFactory(SessionFactory) {
+        dataSource = dataSource
+    }
+    myService(MyService) {
+        nestedBean = { AnotherBean bean ->
+            dataSource = dataSource
+        }
+    }
+}
+```
+
