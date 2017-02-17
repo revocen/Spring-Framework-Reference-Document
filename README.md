@@ -1224,3 +1224,57 @@ beans {
 }
 ```
 
+这种配置方式大体上与XML bean definition相同，并且也支持Spring XML configuration命名空间。也允许使用“importBeans”来直接导入XML bean definition文件。
+
+#### 7.2.3 Using the container
+
+ApplicationContext是一个高级工厂的接口，用于维护已注册的beans和他们的依赖。使用 T getBean(String name, Class<T> requiredType)方法可以获取bean的实例。
+
+ApplicationContext允许按照下面的方式read bean definition and access。
+
+```
+// create and configure beans
+ApplicationContext context = new ClassPathXmlApplicationContext("services.xml", "daos.xml");
+
+// retrieve configured instance
+PetStoreService service = context.getBean("petStore", PetStoreService.class);
+
+// use configured instance
+List<String> userList = service.getUsernameList();
+```
+
+如果使用Groovy配置，启动方式很类似，就是使用一个可以识别Groovy的context实现（也可以识别XML bean definition）：
+
+```
+ApplicationContext context = new GenericGroovyApplicationContext("services.groovy", "daos.groovy");
+```
+
+最灵活的方式是对GenericApplicationContext使用reader代理，比如使用XmlBeanDefinitionReader读取XML文件：
+
+```
+GenericApplicationContext context = new GenericApplicationContext();
+new XmlBeanDefinitionReader(ctx).loadBeanDefinitions("services.xml", "daos.xml");
+context.refresh();
+```
+
+或者使用GrovvyBeanDefinitionReader读取Groovy文件：
+
+```
+GenericApplicationContext context = new GenericApplicationContext();
+new GroovyBeanDefinitionReader(ctx).loadBeanDefinitions("services.groovy", "daos.groovy");
+context.refresh();
+```
+
+该类reader代理可以融合并且适配到相同的ApplicationContext中，这样的话就完全可以从多种配置源中读取bean definition。
+
+可以使用getBean获取bean的实例。ApplicationContext接口还有一些其他获取bean的方法，但最好还是不要在你的应用中使用它们。甚至在你的应用中都不该调用getBean()方法，这样就不会对Spring API产生依赖。Spring集成web framework为web framework的组件（比如controller以及JSF-managed bean）的变量提供依赖注入，你可以通过metadata（比如一个autowiring annotation）配置bean来声明依赖。
+
+#### 7.3 Bean overview
+
+一个Spring IoC容器控制着不止一个bean。这些bean是根据你在configuration metadata中提供的信息（比如在XML的<bean/>中 definition）创建的。
+
+在容器中，这些bean definitions由BeanDefinition对象表示，该对象类型包含以下metadata：
+
+- 一个包含包名的全路径类名：一般是实际继承于定义的bean的类。
+
+- 
