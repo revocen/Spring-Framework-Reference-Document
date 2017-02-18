@@ -1,5 +1,4 @@
-# Spring Framework 翻译试水
-##翻译内容基于Spring Framework 4.3.5.RELEASE
+# Spring Framework
 
 ##第一部分 Spring Framework 概览
   Spring Framework是一个轻量级的，一站式的用于创建企业级应用的解决方案。并且Spring是模块化的，你可以只使用你需要的模块，并非必须全部引用。你可以把任何web framework放在IOC容器之上，也可以只使用hibernate集成或JDBC抽象层这样的代码。Spring Framework支持声明式的事务管理，通过RMI(即Remote Method Invoke 远程方法调用)或web service来访问你的业务逻辑，并提供了几种方式用于保存数据。Spring Framework提供了一个全功能的MVC框架，这样就可以将AOP显示的集成在你的代码中。
