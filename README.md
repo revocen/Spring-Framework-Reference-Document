@@ -1277,4 +1277,26 @@ context.refresh();
 
 - 一个包含包名的全路径类名：一般是实际继承于定义的bean的类。
 
-- 
+- Bean的行为配置，用来告知容器在其内部bean behave的状态（scope，lifecycle callback等等）
+
+- 为了保证当前bean的正常工作，需要引入一些其他的bean；这些引用叫协作（collaborator）或依赖(dependencies)。
+
+- 在新创建的对象中设置其他的配置 ，比如在管理连接池或限制连接池连接数的bean中设置连接的数量。
+
+该metadata会转换成组成每个定义的bean的属性集合。
+
+Table 7.1 The bean definition
+
+|Property|Explained in...|
+|:-------|:--------------|
+|class|	Section 7.3.2, “Instantiating beans”|
+|name|Section 7.3.1, “Naming beans”|
+|scope|Section 7.5, “Bean scopes”|
+|constructor arguments|Section 7.4.1, “Dependency Injection”|
+|properties|Section 7.4.1, “Dependency Injection”|
+|autowiring mode|Section 7.4.5, “Autowiring collaborators”|
+|lazy-initialization mode|Section 7.4.4, “Lazy-initialized beans”|
+|initialization method|the section called “Initialization callbacks”|
+|destruction method|the section called “Destruction callbacks”|
+
+除了包含创建特殊bean信息的bean definitions，ApplicationContexxt实现也可以将由用户在容器外部创建的已存在的对象进行注册。使用getBeanFactory()方法获取ApplicationContext的BeanFactory的实现DefaultListableBeanFactory，通过该BeanFactory就可以完成注册。DefaultListableBeanFactory使用registerSingleon(..)和registerBeanDefinition(..)方法。但一般来说，很多应用都是仅仅通过metadata bean definitions使用定义的bean工作。
